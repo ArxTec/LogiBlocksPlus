@@ -1,5 +1,5 @@
-name: LogiBlocks
-main: plugin.bleachisback.LogiBlocks.LogiBlocksMain
+name: LogiBlocksPlus
+main: plugin.arxtec.LogiBlocksPlus.LogiBlocksMain
 version: 1.05
 commands:
     command:
