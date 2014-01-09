@@ -57,6 +57,10 @@ public class FakePlayer implements Player
 	public FakePlayer()
 	{}
 	
+	public void setResourcePack(String string)
+	{
+		
+	}
 	public void setWorld(World world)
 	{
 		this.world=world;

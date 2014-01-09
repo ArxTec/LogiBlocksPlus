@@ -10,8 +10,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_6_R2.EntityPlayer;
-import net.minecraft.server.v1_6_R2.Packet39AttachEntity;
+import net.minecraft.server.v1_7_R1.EntityPlayer;
+import net.minecraft.server.v1_7_R1.PacketPlayOutAttachEntity;
 
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
@@ -29,7 +29,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Enderman;
@@ -37,6 +37,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Ocelot;
@@ -576,10 +577,13 @@ public class LogiBlocksMain extends JavaPlugin
 		}
 		for(String dataPiece:data.split(";"))
 		{
-			if(ent instanceof LivingEntity&&(dataPiece.startsWith("n=")||dataPiece.startsWith("name=")))
+			if(ent instanceof LivingEntity)
 			{
-				((LivingEntity)ent).setCustomName(dataPiece.substring(dataPiece.indexOf("=")+1,dataPiece.length()));
-				continue;				
+				if( (dataPiece.startsWith("n=")||dataPiece.startsWith("name=")) ) 
+				{
+					((LivingEntity)ent).setCustomName(dataPiece.substring(dataPiece.indexOf("=")+1,dataPiece.length()));
+					continue;
+				}
 			}
 			switch(ent.getType())
 			{
@@ -810,6 +814,26 @@ public class LogiBlocksMain extends JavaPlugin
 					}
 					((Villager)ent).setProfession(villagerProfession);
 					break;
+				case HORSE:
+					Horse.Variant horseVariant=null;
+					try
+					{
+						horseVariant=Horse.Variant.valueOf(dataPiece.toUpperCase());
+					}
+					catch(IllegalArgumentException _e)
+					{}
+					if(horseVariant==null)
+					{
+						continue;
+					}
+					if( dataPiece.toUpperCase().equals("SKELETON_HORSE") || dataPiece.toUpperCase().equals("UNDEAD_HORSE"))
+					{
+						((Horse)ent).setTamed(true);
+						((Horse)ent).setCustomName("Butt Stallion");
+					}
+					((Horse)ent).setVariant(horseVariant);
+					break;
+					
 			}
 		}
 	}
@@ -1142,6 +1166,9 @@ public class LogiBlocksMain extends JavaPlugin
 			case "irongolem":
 			case "golem":
 				return EntityType.IRON_GOLEM;
+			case "entityhorse":
+			case "horse":
+				return EntityType.HORSE;
 			default:
 				return null;
 		}
@@ -1165,7 +1192,7 @@ public class LogiBlocksMain extends JavaPlugin
 			{
 				public void run() 
 				{
-					entPlayer.playerConnection.sendPacket(new Packet39AttachEntity(0,entPlayer,entPlayer.vehicle));
+					entPlayer.playerConnection.sendPacket(new PacketPlayOutAttachEntity(0,entPlayer,entPlayer.vehicle));
 				}						
 			}, 1);
 		}
