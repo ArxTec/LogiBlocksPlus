@@ -43,6 +43,7 @@ public class BaseCommandListener implements CommandExecutor
 			}
 		}
 		
+		/**
 		if(Bukkit.getPluginManager().getPlugin("VoxelSniper")==null)
 		{
 			BaseCommands.VOXELSNIPER.setEnabled(false);
@@ -51,6 +52,7 @@ public class BaseCommandListener implements CommandExecutor
 		{
 			plugin.getLogger().info("Voxelsniper detected - adding support");
 		}
+		**/
 	}
 
 	public boolean onCommand(final CommandSender sender, Command cmd, String label, String[] args)
